@@ -208,6 +208,7 @@ input.success {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm  );
+  transition: all 0.3s ease;
 }
 .pass-wrapper .toggle-password:hover{
   color: var(--primary-color);
@@ -217,6 +218,7 @@ input.success {
     font-size: 14px;
     color: var(--text-light);
     font-weight: 500;
+  cursor: pointer;
 }
 .checkbox-group a {
   color: var(--primary-color);
