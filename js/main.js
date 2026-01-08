@@ -15,7 +15,7 @@ axios.get("https://tarmeezacademy.com/api/v1/posts").then((response) => {
             </div>
             <div class="post-content">
                 <p class="post-text">${post.body}</p>
-                <img src="${post.image}" alt="post image" class="post-img">
+                <img src="${post.image}" alt="" class="post-img">
             </div>
             <div class="post-comments">
                 <i class="fa-regular fa-comment comments-icon"></i>

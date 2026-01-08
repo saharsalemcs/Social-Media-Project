@@ -5,26 +5,35 @@
 }
 
 :root {
+    /* Primary Colors */
     --primary-color: #6C63FF;
     --primary-dark: #5a52d5;
     --primary-light: #8b5cf6;
     --secondary-color: #4CAF50;
+
+    /* Gradients */
     --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --gradient-secondary: linear-gradient(135deg, #6C63FF 0%, #8b5cf6 50%, #6366f1 100%);
     --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
     --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+    /* Neutral Colors - LIGHT MODE */
     --text-dark: #2C3E50;
     --text-light: #7F8C8D;
     --text-white: #FFFFFF;
     --bg-light: #F8F9FA;
     --bg-white: #FFFFFF;
     --bg-dark: rgba(20, 20, 35, 0.95);
+
+    /* Border & Shadow */
     --border-color: #E1E8ED;
     --border-primary: rgba(108, 99, 255, 0.3);
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
     --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
     --shadow-primary: 0 4px 15px rgba(108, 99, 255, 0.3);
+
+    /* Spacing */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
@@ -47,7 +56,7 @@ body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f0ecff;
     min-height: 100vh;
-    padding-top: 65px;
+    padding-top: 64px;
 }
 nav{
     background: #fff;
