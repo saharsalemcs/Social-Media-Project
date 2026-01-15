@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User profile page - View your posts and profile information">
+    <title>Sahar - Profile</title>
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Axios Locally -->
+    <script src="node_modules/axios/dist/axios.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+</head>
+<body>
+
+
+  <div id="navbarContainer"></div>
+
+  <main class="profile-container">
+    <!-- User Profile Section -->
+    <section class="profile-section">
+      <div class="profile-header">
+        <div class="profile-avatar-container">
+          <img id="profileAvatar" src="images/profile.jpg" alt="Profile" class="profile-avatar">
+        </div>
+        <div class="profile-details">
+          <div id="porfileName" class="profile-name">Name</div>
+          <div id="profileUsername" class="profile-username">@username</div>
+          <div id="profileEmail" class="profile-email">email</div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <span id="postsCount" class="stat-number">0</span>
+          <span class="stat-label">POSTS</span>
+        </div>
+        <div class="divider"></div>
+        <div class="stat-item">
+          <span id="commentsCount" class="stat-number">0</span>
+          <span class="stat-label">COMMENTS</span>
+        </div>
+      </div>
+    </section>
+    <!-- User Posts Section -->
+    <section class="posts-section">
+        <h2 class="section-title">My Posts</h2>
+        <div id="userPostsContainer" class="posts-container">
+          <!-- Posts will be loaded here -->
+        </div>
+    </section>
+  </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

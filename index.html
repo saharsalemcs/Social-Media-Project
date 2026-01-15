@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A modern social media platform to connect, share, and interact. Post updates, explore content, and stay connected anytime, anywhere.">
-    <title>Social Media Project</title>
+    <title>Sahar - Home</title>
     <!-- CSS Style -->
     <link rel="stylesheet" href="css/style.css">
     <!-- Axios Locally -->
@@ -14,69 +14,14 @@
 
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="nav-content">
-                    <div class="nav-left">
-                        <h1 class="logo"><a href="index.html">Sahar</a></h1>
-                        <ul class="nav-links">
-                            <li><a class="nav-link" href="index.html">Home</a></li>
-                            <li><a class="nav-link" href="profile.html">Profile</a></li>
-                        </ul>
-                    </div>
-                    <div class="nav-right">
-                        <div class="nav-buttons">
-                            <button class="btn login-btn">Login</button>
-                            <button class="btn register-btn">Register</button>
-                            <button class="theme-toggle" aria-label="Toggle theme">
-                                <!-- Sun Icon -->
-                                <svg class="icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="4" />
-                                    <line x1="12" y1="1" x2="12" y2="3" />
-                                    <line x1="12" y1="21" x2="12" y2="23" />
-                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                                    <line x1="1" y1="12" x2="3" y2="12" />
-                                    <line x1="21" y1="12" x2="23" y2="12" />
-                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                                </svg>
-                                
-                                <!-- Moon Icon -->
-                                <!-- <svg class="icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                                </svg> -->
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+
+    <div id="navbarContainer"></div>
+
     <main class="posts-container">
-        <!-- <div class="post-card">
-            <div class="post-header">
-                <img class="profile-image" src="images/profile.jpg" alt="profile-image">
-                <div>
-                    <h3 class="user-name">user_name</h3>
-                    <span class="post-time">2 hours ago</span>
-                </div>
-            </div>
-            <div class="post-content">
-                <p class="post-text">pla pla pla</p>
-                
-                <img src="" alt="post image" class="post-img">
-            </div>
-            <div class="post-comments">
-                <i class="fa-regular fa-comment comments-icon"></i>
-                <span class="comment-count">0</span>
-                <span class="comment-word">comment</span>
-            </div>
-        </div> -->
     </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/navbar.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
