@@ -1,5 +1,5 @@
 // Update navbar fuction
-function updateNavbar() {
+export function updateNavbar() {
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
   const userData = JSON.parse(
     localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA)
@@ -60,8 +60,28 @@ async function loadNavbar() {
 
     // Update Navabar Data after loading Nav conten
     updateNavbar();
+
+    const logoutBtn = document.querySelector(".logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", logout);
+    }
+
+    const userInfo = document.getElementById("userInfo");
+    if (userInfo) {
+      userInfo.addEventListener("click", () => {
+        window.location.href = "profile.html";
+      });
+    }
   } catch (error) {
     console.log("Error loading navbar:", error);
+  }
+}
+export function logout() {
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.removeItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_DATA);
+    window.alert("logged out successfully");
+    window.location.href = "index.html";
   }
 }
 
@@ -70,4 +90,3 @@ if (document.readyState === "loading") {
 } else {
   loadNavbar();
 }
-window.updateNavbar = updateNavbar;
