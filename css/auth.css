@@ -207,13 +207,17 @@ input.success {
   padding: 8px;
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-sm  );
+  border-radius: var(--radius-sm);
   transition: all 0.3s ease;
 }
 .pass-wrapper .toggle-password:hover{
   color: var(--primary-color);
   background: rgba(108, 99, 255, 0.08);
 } 
+.toggle-password.active{
+  color: var(--primary-color);
+}
+
 .checkbox-group label {
     font-size: 14px;
     color: var(--text-light);

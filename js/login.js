@@ -1,3 +1,4 @@
+import { CONFIG } from "./config.js";
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("userName");
 const passwordInput = document.getElementById("password");
@@ -117,5 +118,7 @@ function setupPasswordToggle() {
     const type =
       passwordInput.getAttribute("type") === "password" ? "text" : "password";
     passwordInput.setAttribute("type", type);
+
+    togglePasswordBtn.classList.toggle("active");
   });
 }

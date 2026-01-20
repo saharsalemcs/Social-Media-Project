@@ -1,3 +1,4 @@
+import { CONFIG } from "./config.js";
 // Update navbar fuction
 export function updateNavbar() {
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);

@@ -1,3 +1,4 @@
+import { CONFIG } from "./config.js";
 const defaultProfileImage = "images/profile.jpg";
 
 async function loadPosts() {

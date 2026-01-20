@@ -1,3 +1,4 @@
+import { CONFIG } from "./config.js";
 const defaultProfileImage = "images/profile.jpg";
 
 // get ID for current user
