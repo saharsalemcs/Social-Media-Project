@@ -1,9 +1,10 @@
 import { CONFIG } from "./config.js";
+// import { toggleAddPostButton } from "./posts.js";
 // Update navbar fuction
 export function updateNavbar() {
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
   const userData = JSON.parse(
-    localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA)
+    localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA),
   );
   const guestLinks = document.getElementById("guestLinks");
   const authLinks = document.getElementById("authLinks");
@@ -41,6 +42,8 @@ export function updateNavbar() {
 
     console.log("Navbar updated - Guest User");
   }
+
+  // toggleAddPostButton();
 }
 
 // Load Navbar
@@ -82,6 +85,7 @@ export function logout() {
     localStorage.removeItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_DATA);
     window.alert("logged out successfully");
+    toggleAddPostButton();
     window.location.href = "index.html";
   }
 }

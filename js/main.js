@@ -1,7 +1,7 @@
 import { CONFIG } from "./config.js";
 const defaultProfileImage = "images/profile.jpg";
 
-async function loadPosts() {
+export async function loadPosts() {
   try {
     const response = await axios.get(`${CONFIG.API_URL}/posts`);
 
@@ -41,6 +41,7 @@ async function loadPosts() {
               </div>
           </div>
           <div class="post-content">
+          ${post.title ? `<h3 class="post-title">${post.title}</h3>` : ""}
               <p class="post-text">${post.body || ""}</p>
               ${postImage}
           </div>
@@ -52,7 +53,7 @@ async function loadPosts() {
         </article>
         `;
     }
-    const container = document.querySelector(".posts-container");
+    const container = document.getElementById("postsWrapper");
     if (!container) return;
     container.innerHTML = postHTML;
 
@@ -66,5 +67,4 @@ async function loadPosts() {
       `;
   }
 }
-
 document.addEventListener("DOMContentLoaded", loadPosts);

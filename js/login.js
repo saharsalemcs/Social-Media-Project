@@ -1,4 +1,6 @@
 import { CONFIG } from "./config.js";
+import { toggleAddPostBtn } from "./posts.js";
+
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("userName");
 const passwordInput = document.getElementById("password");
@@ -55,6 +57,8 @@ async function setupLogin(event) {
     // Show success message
     alert("Login successful!");
 
+    toggleAddPostBtn();
+
     // Redirect to home page
     window.location.href = "index.html";
   } catch (error) {
@@ -84,7 +88,7 @@ function handleRememberMe() {
   if (rememberMeCheckbox.checked) {
     localStorage.setItem(
       CONFIG.STORAGE_KEYS.SAVED_USERNAME,
-      usernameInput.value
+      usernameInput.value,
     );
     localStorage.setItem(CONFIG.STORAGE_KEYS.REMEMBER_ME, "true");
     console.log("Username saved!");
@@ -97,10 +101,10 @@ function handleRememberMe() {
 
 function loadSavedUsername() {
   const savedUsername = localStorage.getItem(
-    CONFIG.STORAGE_KEYS.SAVED_USERNAME
+    CONFIG.STORAGE_KEYS.SAVED_USERNAME,
   );
   const rememberMeStatus = localStorage.getItem(
-    CONFIG.STORAGE_KEYS.REMEMBER_ME
+    CONFIG.STORAGE_KEYS.REMEMBER_ME,
   );
 
   // if the username was saved, fill it in and check the checkbox

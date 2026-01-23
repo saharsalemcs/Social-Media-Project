@@ -4,7 +4,7 @@ const defaultProfileImage = "images/profile.jpg";
 // get ID for current user
 function getCurrentUserId() {
   const userData = JSON.parse(
-    localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA)
+    localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA),
   );
   return userData ? userData.id : null;
 }
@@ -28,9 +28,8 @@ async function loadUserProfile() {
     // Update user info
     document.getElementById("porfileName").textContent =
       user.name || user.username;
-    document.getElementById(
-      "profileUsername"
-    ).textContent = `@${user.username}`;
+    document.getElementById("profileUsername").textContent =
+      `@${user.username}`;
     if (user.email) {
       document.getElementById("profileEmail").textContent = user.email;
     } else {
@@ -93,7 +92,7 @@ async function loadUserPosts() {
     }
 
     let postHTML = "";
-    for (let post of posts) {
+    for (let post of userPosts) {
       console.log(post);
       let profileImage;
       if (
@@ -127,8 +126,9 @@ async function loadUserPosts() {
             </div>
         </div>
         <div class="post-content">
-            <p class="post-text">${post.body || ""}</p>
-            ${postImage}
+        ${post.title ? `<h3 class="post-title">${post.title}</h3>` : ""}
+        <p class="post-text">${post.body || ""}</p>
+        ${postImage}
         </div>
         <div class="post-comments">
             <i class="fa-regular fa-comment comments-icon"></i>

@@ -1,4 +1,5 @@
 import { CONFIG } from "./config.js";
+import { toggleAddPostBtn } from "./posts.js";
 
 const registerationForm = document.getElementById("registerationForm");
 const profilePicInput = document.getElementById("profilePicture");
@@ -110,6 +111,11 @@ async function handleRegister(event) {
     const { token, user } = response.data;
     localStorage.setItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN, token);
     localStorage.setItem(CONFIG.STORAGE_KEYS.USER_DATA, JSON.stringify(user));
+
+    toggleAddPostBtn();
+
+    passwordInput.value = "";
+
     alert("Account created successfully! Welcome");
 
     window.location.href = "index.html";
