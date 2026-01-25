@@ -1,24 +1,33 @@
 import { CONFIG } from "./config.js";
 const defaultProfileImage = "images/profile.jpg";
 
-// get ID for current user
-function getCurrentUserId() {
+// get user's id
+function getUserId() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get("id");
+  if (userId) {
+    return userId;
+  }
+
   const userData = JSON.parse(
     localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA),
   );
-  return userData ? userData.id : null;
-}
-
-// Load user profile info
-async function loadUserProfile() {
-  const userId = getCurrentUserId();
-  if (!userId) {
+  if (!userData) {
     console.log("No user logged in, login first!");
     setTimeout(() => {
       window.location.href = "login.html";
     }, 2000);
-    return;
+    return null;
   }
+
+  return userData.id;
+}
+
+// Load user profile info
+async function loadUserProfile() {
+  const userId = getUserId();
+
+  if (!userId) return;
 
   try {
     const response = await axios.get(`${CONFIG.API_URL}/users/${userId}`);
@@ -26,7 +35,7 @@ async function loadUserProfile() {
     console.log("User profile data:", user);
 
     // Update user info
-    document.getElementById("porfileName").textContent =
+    document.getElementById("profileName").textContent =
       user.name || user.username;
     document.getElementById("profileUsername").textContent =
       `@${user.username}`;
@@ -58,7 +67,7 @@ async function loadUserProfile() {
     console.log("Profile loaded successfully");
   } catch (error) {
     console.error("Error loading profile info: ", error);
-    document.querySelector("profile-section").innerHTML = `
+    document.querySelector(".profile-section").innerHTML = `
         <div style="padding: 20px; text-align: center; color: #c00;">
           ⚠️ Failed to load profile. Please try again later.
         </div>
@@ -68,7 +77,7 @@ async function loadUserProfile() {
 
 // Load user posts
 async function loadUserPosts() {
-  const userId = getCurrentUserId();
+  const userId = getUserId();
   if (!userId) return;
 
   try {
@@ -114,7 +123,7 @@ async function loadUserPosts() {
       }
 
       postHTML += `
-      <article class="post-card">
+      <article class="post-card" data-id="${post.id}">
         <div class="post-header">
             <img class="profile-image" src="${profileImage}" alt="profile-image"
             >
@@ -139,7 +148,17 @@ async function loadUserPosts() {
       `;
     }
 
-    document.getElementById("userPostsContainer").innerHTML = postHTML;
+    const userPostsContainer = document.getElementById("userPostsContainer");
+    if (!userPostsContainer) return;
+    userPostsContainer.innerHTML = postHTML;
+
+    document.querySelectorAll(".post-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const postId = card.dataset.id;
+        window.location.href = `post-details.html?id=${postId}`;
+      });
+    });
+
     console.log(`${userPosts.length} Posts loaded`);
   } catch (error) {
     console.error("Error loading posts", error);

@@ -9,4 +9,9 @@ export const CONFIG = {
     SAVED_USERNAME: "savedUsername",
     REMEMBER_ME: "rememberMe",
   },
+
+  // Default Values
+  DEFAULTS: {
+    THEME: "light",
+  },
 };

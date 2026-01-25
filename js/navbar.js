@@ -85,7 +85,7 @@ export function logout() {
     localStorage.removeItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_DATA);
     window.alert("logged out successfully");
-    toggleAddPostButton();
+    // toggleAddPostButton();
     window.location.href = "index.html";
   }
 }

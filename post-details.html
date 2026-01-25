@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Details - Sahar</title>
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Axios Locally -->
+  <script src="node_modules/axios/dist/axios.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+  
+  </style>
+</head>
+
+<body>
+  <!-- LOading Navbar -->
+  <div id="navbarContainer"></div>
+
+
+  <!-- Main Content -->
+  <main>
+
+    <div class="users-post">
+      <h1><span id="postUsername"></span> Post</h1>
+    </div>
+
+    <div class="post-details-container" id="mainContent">
+      <div id="postCard">
+        <!-- Will be filled by JavaScript -->
+      </div>
+
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <h3 class="comments-title">
+          <i class="fa-regular fa-comments"></i>
+          Comments (<span id="commentsCount">0</span>)
+        </h3>
+
+        <!-- Add Comment (Only for logged-in users) -->
+        <div class="add-comment-box" id="addCommentBox" >
+          <img id="userAvatar" alt="Your Avatar" class="comment-avatar">
+          <form id="addCommentForm" class="comment-form">
+            <textarea id="commentBody" placeholder="Write your comment..." rows="1" required></textarea>
+            <button type="submit" class="btn-send" id="sendCommentBtn">
+              <i class="fa-solid fa-paper-plane"></i>Comment</button>
+          </form>
+        </div>
+
+        <!-- Comments List -->
+        <div id="commentsList" class="comments-list">
+          <!-- Comments will be loaded here -->
+        </div>
+
+        <!-- No Comments State -->
+        <div id="noComments" class="no-comments" style="display: none;">
+          <svg class="no-comments-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="no-comments-icon">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+        </svg>
+          <p>No comments yet. Be the first to comment!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/config.js"></script>
+  <script type="module" src="js/navbar.js"></script>
+  <script type="module" src="js/post-details.js"></script>
+
+</body>
+
+</html>
