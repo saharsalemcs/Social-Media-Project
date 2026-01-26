@@ -1,8 +1,3 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 :root {
     /* Primary Colors */
@@ -15,7 +10,7 @@
     --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --gradient-secondary: linear-gradient(135deg, #6C63FF 0%, #8b5cf6 50%, #6366f1 100%);
     --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-    --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --gradient-bg: linear-gradient(135deg, #f0ecff 0%, #c3cfe2 100%);
 
     /* Neutral Colors - LIGHT MODE */
     --text-dark: #2C3E50;
@@ -40,7 +35,47 @@
     --radius-xl: 20px;
     --radius-full: 50%;
 }
+/* ===================================== */
+/*         DARK MODE VARIABLES           */
+/* ===================================== */
 
+[data-theme="dark"] {
+    --primary-color: #8b5cf6;
+    --primary-dark: #7c3aed;
+    --primary-light: #a78bfa;
+    --secondary-color: #10b981;
+
+    --gradient-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+
+    --text-dark: #f1f5f9;
+    --text-light: #cbd5e1;
+    --text-white: #FFFFFF;
+    --bg-light: #1e293b;
+    --bg-white: #0f172a;
+    --bg-dark: rgba(15, 23, 42, 0.95);
+
+    --border-color: #334155;
+    --border-primary: rgba(139, 92, 246, 0.4);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.6);
+    --shadow-primary: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--gradient-bg);
+    min-height: 100vh;
+    color: var(--text-dark);
+    direction: ltr;
+    padding-top: 64px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 button{
     border: none;
     outline: none;
@@ -52,16 +87,10 @@ li{
 a{
     text-decoration: none;
 }
-body{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f0ecff;
-    min-height: 100vh;
-    padding-top: 64px;
-}
 
 /* =================================== Nav Style ===================================== */
 nav{
-    background: #fff;
+    background: var(--bg-white);
     position: fixed;
     top: 0;
     left: 0;
@@ -142,24 +171,27 @@ nav{
 }
 .nav-buttons .btn:hover{
     background: #6C63FF;
-    color: #fff;
+    color: var(--bg-white);
     transform: translateY(-2px);
 }
 .theme-toggle{
     background: transparent;
     width: 48px;
     height: 48px;
-    border: 2px solid #E1E8ED;
+    border: 2px solid var(--border-color);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #2C3E50;
+    color: var(--text-dark);
     transition: all 0.3s ease;
 }
 .theme-toggle:hover{
     border-color: #6C63FF;
     transform: scale(1.05);
+}
+.theme-toggle svg{
+    transition: all 0.3s ease;
 }
 .theme-toggle .icon{
     width: 24px;
@@ -206,7 +238,7 @@ nav{
 .logout-btn {
     background: #e74c3c !important;
     border-color: #e74c3c !important;
-    color: white !important;
+    color: #fff !important;
 }
 
 .logout-btn:hover {
@@ -226,31 +258,31 @@ nav{
     padding: 2rem 1rem;
 }
 .post-card{
-    background: #fff;
-    border: 1px solid #E1E8ED;
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
     margin-bottom: 20px;
     padding: 5px 5px 22px 5px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
 }
 .post-card:hover{
     transform: translateY(-5px);
     box-shadow: 0 12px 35px rgba(108, 99, 255, 0.2);
-    border-color: #6C63FF;
+    border-color: var(--border-primary);
 }
 .post-header{
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 1rem;
-    border-bottom: 1px solid #F8F9FA;
+    border-bottom: 1px solid var(--bg-light);
 }
 .post-header .profile-image{
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    border: 2px solid #6C63FF;
+    border: 2px solid var(--primary-color);
     object-fit: cover;
     cursor: pointer;
     flex-shrink: 0;
@@ -260,14 +292,14 @@ nav{
     transform: scale(1.1);
 }
 .post-header .user-name{
-    color: #2C3E50;
+    color: var(--text-dark);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     margin-bottom: 0.12rem;
 }
 .post-header .post-time{
-    color: #7F8C8D;
+    color: var(--text-light);
     font-size: 0.8rem;
 }
 .post-content{
@@ -276,7 +308,7 @@ nav{
     overflow: hidden;
 }
 .post-content .post-text{
-    color: #4A5D73;
+    color: var(--text-dark);
     line-height: 1.7;
     font-size: 1.2rem;
     line-break: auto;
@@ -300,7 +332,7 @@ nav{
     align-items: center;
     gap: 10px;
     margin: 1rem 1.5rem 0.3rem;
-    color: #7F8C8D;
+    color: var(--text-light);
     font-size: 1rem;
     padding: 8px 12px;
     border-radius: 12px;
@@ -434,7 +466,7 @@ nav{
     font-size: 1.1rem;
     font-weight: 600;
     margin: 8px 0 6px;
-    color: #2C3E50;
+    color: var(--text-dark);
     line-height: 1.4;
     word-break: break-word;
     padding: 0 18px;
@@ -987,7 +1019,7 @@ nav{
 
  .edit-btn {
      background: #3498db;
-     color: white;
+     color: var(--bg-white);
  }
 
  .edit-btn:hover {
@@ -1056,7 +1088,7 @@ nav{
 
       .btn-delete {
         background: #e74c3c;
-        color: white;
+        color: var(--bg-white);
       }
 
       .btn-delete:hover {

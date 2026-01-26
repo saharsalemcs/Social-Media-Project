@@ -8,10 +8,6 @@ export const CONFIG = {
     USER_DATA: "userData",
     SAVED_USERNAME: "savedUsername",
     REMEMBER_ME: "rememberMe",
-  },
-
-  // Default Values
-  DEFAULTS: {
-    THEME: "light",
+    THEME: "theme",
   },
 };
