@@ -1,6 +1,9 @@
 import { CONFIG } from "./config.js";
 const defaultProfileImage = "images/profile.jpg";
 
+let currentEditPostId = null;
+let currentDeletePostId = null;
+
 // get user's id
 function getUserId() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -33,6 +36,8 @@ async function loadUserProfile() {
     const response = await axios.get(`${CONFIG.API_URL}/users/${userId}`);
     const user = response.data.data;
     console.log("User profile data:", user);
+
+    document.title = `${user.username} - Profile`;
 
     // Update user info
     document.getElementById("profileName").textContent =
@@ -80,6 +85,12 @@ async function loadUserPosts() {
   const userId = getUserId();
   if (!userId) return;
 
+  // if user logged in
+  const currentUserData = JSON.parse(
+    localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA),
+  );
+  const isOwnProfile = currentUserData && currentUserData.id == userId;
+
   try {
     const response = await axios.get(`${CONFIG.API_URL}/users/${userId}/posts`);
     const userPosts = response.data.data;
@@ -122,17 +133,29 @@ async function loadUserPosts() {
         postImage = `<img src="${post.image.url}" class="post-img" alt="post image">`;
       }
 
+      const actionButtons = isOwnProfile
+        ? `
+
+      <div class="post-actions">
+        <button class="action-btn edit-btn" data-id="${post.id}" data-title="${post.title || ""}" data-body="${post.body || ""}">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn delete-btn" id="deleteBtn" data-id="${post.id}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      `
+        : "";
+
       postHTML += `
       <article class="post-card" data-id="${post.id}">
         <div class="post-header">
-            <img class="profile-image" src="${profileImage}" alt="profile-image"
-            >
+            <img class="profile-image" src="${profileImage}" alt="profile-image">
             <div>
-                <h2 class="user-name">${
-                  post.author.username || "Unknown User"
-                }</h2>
+                <h2 class="user-name">${post.author.username || "Unknown User"}</h2>
                 <span class="post-time">${post.created_at}</span>
             </div>
+            ${actionButtons}
         </div>
         <div class="post-content">
         ${post.title ? `<h3 class="post-title">${post.title}</h3>` : ""}
@@ -152,12 +175,7 @@ async function loadUserPosts() {
     if (!userPostsContainer) return;
     userPostsContainer.innerHTML = postHTML;
 
-    document.querySelectorAll(".post-card").forEach((card) => {
-      card.addEventListener("click", () => {
-        const postId = card.dataset.id;
-        window.location.href = `post-details.html?id=${postId}`;
-      });
-    });
+    attachPostEventListeners();
 
     console.log(`${userPosts.length} Posts loaded`);
   } catch (error) {
@@ -169,8 +187,153 @@ async function loadUserPosts() {
       `;
   }
 }
+function attachPostEventListeners() {
+  document.querySelectorAll(".post-card").forEach((card) => {
+    card.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const postId = card.dataset.id;
+      window.location.href = `post-details.html?id=${postId}`;
+    });
+  });
+  document.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const postId = this.dataset.id;
+      const title = this.dataset.title;
+      const body = this.dataset.body;
+      openEditModal(postId, title, body);
+    });
+  });
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const postId = this.dataset.id;
+      openDeleteModal(postId);
+    });
+  });
+}
 
+// Open Edit Modal
+function openEditModal(postId, title, body) {
+  currentEditPostId = postId;
+  // fill fields with current data
+  document.getElementById("editTitle").value = title || "";
+  document.getElementById("editBody").value = body || "";
+
+  document.getElementById("editModal").classList.add("show");
+  document.body.style.overflow = "hidden"; // stop scrolling on the backgorund (focus only on the modal)
+}
+// Close Edit Modal
+function closeEditModal() {
+  document.getElementById("editModal").classList.remove("show");
+  currentEditPostId = null;
+  document.body.style.overflow = "auto"; // allow scrolling againn
+}
+
+// Save Changes
+async function saveEditedPost(e) {
+  e.preventDefault();
+
+  const title = document.getElementById("editTitle").value.trim();
+  const body = document.getElementById("editBody").value.trim();
+  if (!body) {
+    alert("Please write something!");
+    return;
+  }
+  const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
+  if (!token) return;
+
+  try {
+    await axios.put(
+      `${CONFIG.API_URL}/posts/${currentEditPostId}`,
+      { title: title || null, body },
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+
+    alert("Post updated successfully!");
+
+    closeEditModal();
+
+    await loadUserPosts();
+  } catch (error) {
+    alert("Failed to update post!");
+    console.log("Failed to update post!", error);
+  }
+}
+
+// Open Delete Modal
+function openDeleteModal(postId) {
+  currentDeletePostId = postId;
+  document.getElementById("deleteModal").classList.add("show");
+  document.body.style.overflow = "hidden"; // stop scrolling on the backgorund (focus only on the modal)
+}
+// Close Delete Modal
+function closeDeleteModal() {
+  document.getElementById("deleteModal").classList.remove("show");
+  currentDeletePostId = null;
+  document.body.style.overflow = "auto"; // allow scrolling againn
+}
+// Confirm Delete
+async function confirmDelete() {
+  const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
+  if (!token) return;
+
+  try {
+    await axios.delete(`${CONFIG.API_URL}/posts/${currentDeletePostId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    alert("Post deleted successfully!");
+    closeDeleteModal();
+
+    await loadUserPosts();
+    await loadUserProfile();
+  } catch (error) {
+    console.log("Failed to delete post!", error);
+    alert("Failed to delete post!");
+  }
+}
+function attachModalEventListeners() {
+  const closeModalBtn = document.getElementById("closeModal");
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closeEditModal);
+  }
+
+  const editCancelBtn = document.querySelector("#editModal .cancel-btn");
+  if (editCancelBtn) {
+    editCancelBtn.addEventListener("click", closeEditModal);
+  }
+
+  const editForm = document.getElementById("editPostForm");
+  if (editForm) {
+    editForm.addEventListener("submit", saveEditedPost);
+  }
+
+  const deleteConfirmBtn = document.querySelector("#deleteModal .btn-delete");
+  if (deleteConfirmBtn) {
+    deleteConfirmBtn.addEventListener("click", confirmDelete);
+  }
+
+  const deleteCancelBtn = document.querySelector("#deleteModal .btn-cancel");
+  if (deleteCancelBtn) {
+    deleteCancelBtn.addEventListener("click", closeDeleteModal);
+  }
+
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal")) {
+      closeEditModal();
+      closeDeleteModal();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeEditModal();
+      closeDeleteModal();
+    }
+  });
+}
 document.addEventListener("DOMContentLoaded", () => {
   loadUserProfile();
   loadUserPosts();
+  attachModalEventListeners();
 });

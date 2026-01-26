@@ -7,6 +7,13 @@ function getPostIdFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("id");
 }
+function isMyPost(post) {
+  const currentUser = JSON.parse(
+    localStorage.getItem(CONFIG.STORAGE_KEYS.USER_DATA),
+  );
+  if (!currentUser) return false;
+  return post.author.id === currentUser.id;
+}
 
 async function loadPostDetails() {
   const postId = getPostIdFromURL();
@@ -26,7 +33,9 @@ async function loadPostDetails() {
 
     // Show/hide add comment box (logged in or not)
     toggleAddCommentBox();
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error loading post details:", error);
+  }
 }
 
 function displayPost(post) {
@@ -35,15 +44,27 @@ function displayPost(post) {
   const postImage = getPostImage(post);
   const postUsername = document.getElementById("postUsername");
   postUsername.textContent = `${post.author.username}'s`;
+  const canEdit = isMyPost(post);
+  const postActions = `
+      <div class="post-actions">
+      <button class="action-btn edit-btn" data-id="${post.id}" data-title="${post.title || ""}" data-body="${post.body || ""}">
+        <i class="fas fa-edit"></i>
+      </button>
+      <button class="action-btn delete-btn" id="deleteBtn" data-id="${post.id}">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+    `;
 
   postCard.innerHTML = `
   <article class="post-card" data-id="${post.id}" data-user-id="${post.author.id}">
     <div class="post-header">
         <img class="profile-image" src="${profileImage}" alt="profile-image">
         <div>
-            <h2 class="user-name">${post.author.username || "Unknown User"}</h2>
-            <span class="post-time">${post.created_at}</span>
+          <h2 class="user-name">${post.author.username || "Unknown User"}</h2>
+          <span class="post-time">${post.created_at}</span>
         </div>
+        ${canEdit ? postActions : ""}
     </div>
     <div class="post-content">
     ${post.title ? `<h3 class="post-title">${post.title}</h3>` : ""}
@@ -74,6 +95,8 @@ function displayComments(comments) {
   const commentsCount = document.getElementById("commentsCount");
   const noComments = document.getElementById("noComments");
 
+  commentsList.innerHTML = "";
+
   commentsCount.textContent = comments.length;
   if (comments.length === 0) {
     commentsList.style.display = "none";
@@ -81,11 +104,14 @@ function displayComments(comments) {
     return;
   }
 
-  let commentsHTML = "";
+  commentsList.style.display = "block";
+  noComments.style.display = "none";
+
+  // let commentsHTML = "";
   comments.forEach((comment) => {
     const authorImage = getAuthorImage(comment);
 
-    commentsHTML += `
+    commentsList.innerHTML += `
     <div class="comment-item">
       <img class="comment-avatar" src="${authorImage}" alt="${comment.author.username}">
       <div class="comment-content">
@@ -95,7 +121,7 @@ function displayComments(comments) {
     </div>
     `;
   });
-  commentsList.innerHTML = commentsHTML;
+  // commentsList.innerHTML = commentsHTML;
 }
 function toggleAddCommentBox() {
   const addCommentBox = document.getElementById("addCommentBox");
@@ -161,7 +187,7 @@ async function handleAddComment(event) {
     document.getElementById("commentBody").value = "";
 
     // reload post to get updated comments
-    loadPostDetails();
+    await loadPostDetails();
   } catch (error) {
     console.error("Error adding comment:", error);
   } finally {
