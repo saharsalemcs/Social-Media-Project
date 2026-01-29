@@ -1,10 +1,12 @@
 import { CONFIG } from "./config.js";
 import { loadPosts } from "./main.js";
+import { showSuccessMessage, showErrorMessage } from "./ui.js";
+// import { initThemeToggle } from "./theme.js";
 
 let addPostBtn;
 let addPostModal;
 let closeModalBtn;
-let cancelBtn;
+let cancelAddPostBtn;
 let submitBtn;
 let addPostForm;
 let postImageInput;
@@ -30,6 +32,7 @@ async function loadPostModal() {
     attachEventListeners();
   } catch (error) {
     console.error("error loading post modal!");
+    showErrorMessage("error loading post modal!");
   }
 }
 
@@ -37,7 +40,7 @@ function initializeModalElements() {
   addPostBtn = document.querySelector(".add-post-btn");
   addPostModal = document.getElementById("addPostModal");
   closeModalBtn = document.getElementById("closeModal");
-  cancelBtn = document.getElementById("cancelBtn");
+  cancelAddPostBtn = document.getElementById("cancelAddPostBtn");
   submitBtn = document.getElementById("submitBtn");
   addPostForm = document.getElementById("addPostForm");
   postImageInput = document.getElementById("postImage");
@@ -47,7 +50,7 @@ function initializeModalElements() {
 function attachEventListeners() {
   if (addPostBtn) addPostBtn.addEventListener("click", openModal);
   if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
-  if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+  if (cancelAddPostBtn) cancelAddPostBtn.addEventListener("click", closeModal);
   if (addPostForm) addPostForm.addEventListener("submit", handleCreatePost);
   if (postImageInput)
     postImageInput.addEventListener("change", handlePostImagePreview);
@@ -84,7 +87,7 @@ function openModal() {
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
   // check for security and login if any synario happened in login but the btn still exist
   if (!token) {
-    alert("please login first!");
+    showErrorMessage("please login first!");
     setTimeout(() => {
       window.location.href = "login.html";
     }, 1000);
@@ -161,11 +164,9 @@ function removePostImage() {
 async function handleCreatePost(event) {
   if (event) event.preventDefault();
 
-  console.log("SUBMIT");
-
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
   if (!token) {
-    alert("please loging first!");
+    showErrorMessage("please login first!");
     setTimeout(() => {
       window.location.href = "login.html";
     }, 1000);
@@ -179,7 +180,7 @@ async function handleCreatePost(event) {
 
   // validation
   if (!body || body.trim() === "") {
-    alert("please write something in post body!");
+    showErrorMessage("please write something in post body!");
     return;
   }
 
@@ -203,15 +204,14 @@ async function handleCreatePost(event) {
       },
     });
     console.log("post created", response.data.data);
-    alert("post created successfully!");
+    showSuccessMessage("post created successfully!");
 
     closeModal();
 
     loadPosts();
-
-    console.log("🔄 Posts reloaded");
   } catch (error) {
     console.error("Error creating post:", error);
+    showErrorMessage("Error creating post");
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -222,6 +222,6 @@ async function handleCreatePost(event) {
 
 document.addEventListener("DOMContentLoaded", async function () {
   await loadPostModal();
-
+  // initThemeToggle();
   toggleAddPostBtn();
 });

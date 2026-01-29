@@ -1,7 +1,7 @@
 import { CONFIG } from "./config.js";
 
 // Load Saved Theme
-function loadSavedTheme() {
+export function loadSavedTheme() {
   const savedTheme = localStorage.getItem(CONFIG.STORAGE_KEYS.THEME);
 
   if (savedTheme) {
@@ -20,7 +20,7 @@ function loadSavedTheme() {
 }
 
 // Toggle Theme
-function toggleTheme() {
+export function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute("data-theme");
   const newTheme = currentTheme === "dark" ? "light" : "dark";
 
@@ -36,7 +36,7 @@ function toggleTheme() {
 }
 
 // Update Theme Icon
-function updateThemeIcon() {
+export function updateThemeIcon() {
   const themeToggle = document.querySelector(".theme-toggle");
   if (!themeToggle) return;
 
@@ -68,8 +68,8 @@ function updateThemeIcon() {
 }
 
 // Initialize theme Toggle button
-function initThemeToggle() {
-  // loadSavedTheme();
+export function initThemeToggle() {
+  loadSavedTheme();
 
   const themeToggle = document.querySelector(".theme-toggle");
   if (themeToggle) {
@@ -80,9 +80,7 @@ function initThemeToggle() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadSavedTheme();
-  initThemeToggle();
-});
-
-export { toggleTheme, loadSavedTheme };
+// document.addEventListener("DOMContentLoaded", () => {
+//   loadSavedTheme();
+//   initThemeToggle();
+// });

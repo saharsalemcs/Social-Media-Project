@@ -1,5 +1,7 @@
 import { CONFIG } from "./config.js";
-// import { toggleAddPostButton } from "./posts.js";
+import { showSuccessMessage, logoutConfimation } from "./ui.js";
+import { initThemeToggle } from "./theme.js";
+
 // Update navbar fuction
 export function updateNavbar() {
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
@@ -47,7 +49,7 @@ export function updateNavbar() {
 }
 
 // Load Navbar
-async function loadNavbar() {
+export async function loadNavbar() {
   const navContainer = document.getElementById("navbarContainer");
   if (!navContainer) {
     console.warn("Navbar container not found");
@@ -62,9 +64,19 @@ async function loadNavbar() {
     navContainer.innerHTML = navHTML;
     console.log("Navbar loaded successfully");
 
+    initThemeToggle();
+
     // Update Navabar Data after loading Nav conten
     updateNavbar();
 
+    const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+    if (confirmLogoutBtn) {
+      confirmLogoutBtn.addEventListener("click", handleLogout);
+    }
+    const cancelLogoutBtn = document.getElementById("cancelBtn");
+    if (cancelLogoutBtn) {
+      cancelLogoutBtn.addEventListener("click", logoutConfimation);
+    }
     const logoutBtn = document.querySelector(".logout-btn");
     if (logoutBtn) {
       logoutBtn.addEventListener("click", logout);
@@ -81,13 +93,17 @@ async function loadNavbar() {
   }
 }
 export function logout() {
-  if (confirm("Are you sure you want to logout?")) {
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_DATA);
-    window.alert("logged out successfully");
-    // toggleAddPostButton();
+  document.getElementById("cofirmLogout").classList.add("show");
+  document.body.style.overflow = "hidden"; // lock background scroll (focus only on the modal)
+}
+
+export function handleLogout() {
+  localStorage.removeItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
+  localStorage.removeItem(CONFIG.STORAGE_KEYS.USER_DATA);
+  showSuccessMessage("logged out successfully!");
+  setTimeout(() => {
     window.location.href = "index.html";
-  }
+  }, 2000);
 }
 
 if (document.readyState === "loading") {

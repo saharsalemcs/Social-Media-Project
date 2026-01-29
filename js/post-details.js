@@ -1,5 +1,7 @@
 import { CONFIG } from "./config.js";
 import { getProfileImage, getPostImage } from "./main.js";
+import { showSuccessMessage, showErrorMessage, initScrollToTop } from "./ui.js";
+import { openEditModal, openDeleteModal } from "./profile.js";
 const defaultProfileImage = "images/profile.jpg";
 
 // get post id from url
@@ -35,6 +37,7 @@ async function loadPostDetails() {
     toggleAddCommentBox();
   } catch (error) {
     console.error("Error loading post details:", error);
+    showErrorMessage("Error loading post details");
   }
 }
 
@@ -79,6 +82,22 @@ function displayPost(post) {
   </article>
   `;
 
+  document.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const postId = btn.dataset.id;
+      const title = btn.dataset.title;
+      const body = btn.dataset.body;
+      openEditModal(postId, title, body);
+    });
+  });
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const postId = btn.dataset.id;
+      openDeleteModal(postId);
+    });
+  });
   const img = document.querySelector(".profile-image");
   const userName = document.querySelector(".user-name");
   const card = document.querySelector(".post-card");
@@ -156,7 +175,7 @@ async function handleAddComment(event) {
   const sendBtn = document.getElementById("sendCommentBtn");
 
   if (!token) {
-    alert("please login to add comment!");
+    showErrorMessage("please login to add comment!");
     setTimeout(() => {
       window.location.href = "login.html";
     }, 1000);
@@ -164,7 +183,7 @@ async function handleAddComment(event) {
   }
 
   if (!commentBody) {
-    alert("Please write a comment!");
+    showErrorMessage("Please write a something!");
     return;
   }
 
@@ -184,12 +203,15 @@ async function handleAddComment(event) {
     );
 
     console.log("comment added: ", response.data);
+    showSuccessMessage("comment added successfully!");
     document.getElementById("commentBody").value = "";
 
     // reload post to get updated comments
     await loadPostDetails();
   } catch (error) {
     console.error("Error adding comment:", error);
+    const message = error.response?.data?.message || "Failed to add comment";
+    showErrorMessage(message);
   } finally {
     sendBtn.disabled = false;
     sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i>Comment`;
@@ -216,4 +238,5 @@ if (addCommentForm) {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadPostDetails();
+  initScrollToTop();
 });

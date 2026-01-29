@@ -1,5 +1,6 @@
 import { CONFIG } from "./config.js";
 import { toggleAddPostBtn } from "./posts.js";
+import { showSuccessMessage, showErrorMessage } from "./ui.js";
 
 const registerationForm = document.getElementById("registerationForm");
 const profilePicInput = document.getElementById("profilePicture");
@@ -56,36 +57,36 @@ async function handleRegister(event) {
 
   // Validate all fields
   if (!fullName || !username || !email || !password || !confirmPassword) {
-    alert("please fill in all fields!");
+    showErrorMessage("please fill in all fields!");
     return;
   }
 
   if (fullName.length < 3) {
-    alert("full name must be at least 3 characters!");
+    showErrorMessage("full name must be at least 3 characters!");
   }
 
   if (username.length < 3) {
-    alert("full name must be at least 3 characters!");
+    showErrorMessage("full name must be at least 3 characters!");
   }
 
   if (password.length < 6) {
-    alert("password must be at leat 6 characters");
+    showErrorMessage("password must be at leat 6 characters");
     return;
   }
 
   if (password !== confirmPassword) {
-    alert("passwords do not match!");
+    showErrorMessage("passwords do not match!");
     return;
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailPattern.test(email)) {
-    alert("please enter a valid email address!");
+    showErrorMessage("please enter a valid email address!");
     return;
   }
 
   if (!termsCheckbox.checked) {
-    alert("You must agree with Term & Conditions!");
+    showErrorMessage("You must agree with Term & Conditions!");
     return;
   }
 
@@ -106,7 +107,9 @@ async function handleRegister(event) {
 
   try {
     const response = await axios.post(`${CONFIG.API_URL}/register`, formData);
-    console.log("successful registration ", response.data);
+    showSuccessMessage(
+      "Account created successfully! Redirecting to home page...",
+    );
 
     const { token, user } = response.data;
     localStorage.setItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN, token);
@@ -116,11 +119,12 @@ async function handleRegister(event) {
 
     passwordInput.value = "";
 
-    alert("Account created successfully! Welcome");
-
-    window.location.href = "index.html";
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
   } catch (error) {
-    console.error("Registration error:", error);
+    const message = error.response?.data?.message || "Register failed!";
+    showErrorMessage(message);
   } finally {
     createAccBtn.disabled = false;
     createAccBtn.textContent = "Create Account";

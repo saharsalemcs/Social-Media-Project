@@ -1,4 +1,5 @@
 import { CONFIG } from "./config.js";
+import { initScrollToTop, showSuccessMessage, showErrorMessage } from "./ui.js";
 const defaultProfileImage = "images/profile.jpg";
 
 let currentEditPostId = null;
@@ -35,7 +36,6 @@ async function loadUserProfile() {
   try {
     const response = await axios.get(`${CONFIG.API_URL}/users/${userId}`);
     const user = response.data.data;
-    console.log("User profile data:", user);
 
     document.title = `${user.username} - Profile`;
 
@@ -94,7 +94,7 @@ async function loadUserPosts() {
   try {
     const response = await axios.get(`${CONFIG.API_URL}/users/${userId}/posts`);
     const userPosts = response.data.data;
-    console.log("User posts:", userPosts);
+    // console.log("User posts:", userPosts);
 
     if (userPosts.length === 0) {
       document.getElementById("userPostsContainer").innerHTML = `
@@ -180,11 +180,7 @@ async function loadUserPosts() {
     console.log(`${userPosts.length} Posts loaded`);
   } catch (error) {
     console.error("Error loading posts", error);
-    document.querySelector(".posts-section").innerHTML = `
-        <div style="padding: 20px; text-align: center; color: #c00;">
-          ⚠️ Failed to load posts. Please try again later.
-        </div>
-      `;
+    showErrorMessage("Error loading posts");
   }
 }
 function attachPostEventListeners() {
@@ -214,7 +210,7 @@ function attachPostEventListeners() {
 }
 
 // Open Edit Modal
-function openEditModal(postId, title, body) {
+export function openEditModal(postId, title, body) {
   currentEditPostId = postId;
   // fill fields with current data
   document.getElementById("editTitle").value = title || "";
@@ -224,7 +220,7 @@ function openEditModal(postId, title, body) {
   document.body.style.overflow = "hidden"; // stop scrolling on the backgorund (focus only on the modal)
 }
 // Close Edit Modal
-function closeEditModal() {
+export function closeEditModal() {
   document.getElementById("editModal").classList.remove("show");
   currentEditPostId = null;
   document.body.style.overflow = "auto"; // allow scrolling againn
@@ -237,7 +233,7 @@ async function saveEditedPost(e) {
   const title = document.getElementById("editTitle").value.trim();
   const body = document.getElementById("editBody").value.trim();
   if (!body) {
-    alert("Please write something!");
+    showErrorMessage("Please write something!");
     return;
   }
   const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
@@ -250,7 +246,7 @@ async function saveEditedPost(e) {
       { headers: { Authorization: `Bearer ${token}` } },
     );
 
-    alert("Post updated successfully!");
+    showSuccessMessage("Post updated successfully!");
 
     closeEditModal();
 
@@ -262,16 +258,16 @@ async function saveEditedPost(e) {
 }
 
 // Open Delete Modal
-function openDeleteModal(postId) {
+export function openDeleteModal(postId) {
   currentDeletePostId = postId;
   document.getElementById("deleteModal").classList.add("show");
   document.body.style.overflow = "hidden"; // stop scrolling on the backgorund (focus only on the modal)
 }
 // Close Delete Modal
-function closeDeleteModal() {
+export function closeDeleteModal() {
   document.getElementById("deleteModal").classList.remove("show");
   currentDeletePostId = null;
-  document.body.style.overflow = "auto"; // allow scrolling againn
+  document.body.style.overflow = "auto"; //  restore scrolling
 }
 // Confirm Delete
 async function confirmDelete() {
@@ -282,7 +278,7 @@ async function confirmDelete() {
     await axios.delete(`${CONFIG.API_URL}/posts/${currentDeletePostId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    alert("Post deleted successfully!");
+    showSuccessMessage("Post deleted successfully!");
     closeDeleteModal();
 
     await loadUserPosts();
@@ -336,4 +332,5 @@ document.addEventListener("DOMContentLoaded", () => {
   loadUserProfile();
   loadUserPosts();
   attachModalEventListeners();
+  initScrollToTop();
 });

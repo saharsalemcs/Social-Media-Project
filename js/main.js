@@ -1,4 +1,6 @@
 import { CONFIG } from "./config.js";
+import { initScrollToTop } from "./ui.js";
+// import { initThemeToggle } from "./theme.js";
 const defaultProfileImage = "images/profile.jpg";
 
 let currentPage = 1;
@@ -105,4 +107,6 @@ window.addEventListener("scroll", () => {
 });
 document.addEventListener("DOMContentLoaded", () => {
   loadPosts(1);
+  initScrollToTop();
+  // initThemeToggle();
 });

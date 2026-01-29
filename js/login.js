@@ -1,5 +1,6 @@
 import { CONFIG } from "./config.js";
 import { toggleAddPostBtn } from "./posts.js";
+import { showErrorMessage, showSuccessMessage } from "./ui.js";
 
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("userName");
@@ -23,7 +24,11 @@ async function setupLogin(event) {
 
   // Validation
   if (!username || !password) {
-    alert("Please fill in all fields!");
+    showErrorMessage("Please fill in all fields!");
+    return;
+  }
+  if (password.length < 6) {
+    showErrorMessage("Password must be at least 6 characters");
     return;
   }
 
@@ -55,14 +60,18 @@ async function setupLogin(event) {
     passwordInput.value = "";
 
     // Show success message
-    alert("Login successful!");
+    showSuccessMessage("Login successful! Redirecting to home page...");
 
     toggleAddPostBtn();
 
     // Redirect to home page
-    window.location.href = "index.html";
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
   } catch (error) {
     console.error("Login error:", error);
+    const message = error.response?.data?.message || "Login failed!";
+    showErrorMessage(message);
     passwordInput.value = "";
   } finally {
     // Remove Loading State
