@@ -72,11 +72,7 @@ async function loadUserProfile() {
     console.log("Profile loaded successfully");
   } catch (error) {
     console.error("Error loading profile info: ", error);
-    document.querySelector(".profile-section").innerHTML = `
-        <div style="padding: 20px; text-align: center; color: #c00;">
-          ⚠️ Failed to load profile. Please try again later.
-        </div>
-      `;
+    showErrorMessage("Failed to load profile. Please try again later");
   }
 }
 
@@ -252,7 +248,7 @@ async function saveEditedPost(e) {
 
     await loadUserPosts();
   } catch (error) {
-    alert("Failed to update post!");
+    showErrorMessage("Failed to update post!");
     console.log("Failed to update post!", error);
   }
 }
@@ -285,7 +281,7 @@ async function confirmDelete() {
     await loadUserProfile();
   } catch (error) {
     console.log("Failed to delete post!", error);
-    alert("Failed to delete post!");
+    showErrorMessage("Failed to delete post!");
   }
 }
 function attachModalEventListeners() {

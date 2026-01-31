@@ -45,3 +45,80 @@ export function logoutConfimation() {
   document.getElementById("cofirmLogout").classList.remove("show");
   document.body.style.overflow = "auto"; //  restore scrolling
 }
+
+function initMobileMenu() {
+  const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
+  const navMenu = document.querySelector(".nav-buttons");
+
+  if (!mobileMenuToggle || !navMenu) {
+    console.warn("Mobile menu elements not found");
+    return;
+  }
+
+  mobileMenuToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleMobileMenu();
+  });
+
+  navMenu.querySelectorAll("a, button").forEach((el) => {
+    el.addEventListener("click", () => {
+      closeMobileMenu();
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    const isClickInsideMenu = navMenu.contains(e.target);
+    const isClickOnToggle = mobileMenuToggle.contains(e.target);
+
+    if (
+      !isClickInsideMenu &&
+      !isClickOnToggle &&
+      navMenu.classList.contains("active")
+    ) {
+      closeMobileMenu();
+    }
+  });
+
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth > 768) {
+        closeMobileMenu();
+      }
+    }, 200);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && navMenu.classList.contains("active")) {
+      closeMobileMenu();
+    }
+  });
+}
+
+function toggleMobileMenu() {
+  const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
+  const navMenu = document.querySelector(".nav-buttons");
+
+  if (!mobileMenuToggle || !navMenu) return;
+
+  const isActive = navMenu.classList.contains("active");
+
+  mobileMenuToggle.classList.toggle("active");
+  navMenu.classList.toggle("active");
+
+  document.body.style.overflow = isActive ? "" : "hidden";
+}
+
+function closeMobileMenu() {
+  const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
+  const navMenu = document.querySelector(".nav-buttons");
+
+  if (!mobileMenuToggle || !navMenu) return;
+
+  mobileMenuToggle.classList.remove("active");
+  navMenu.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+export { initMobileMenu, toggleMobileMenu, closeMobileMenu };

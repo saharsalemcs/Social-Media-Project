@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { showSuccessMessage, logoutConfimation } from "./ui.js";
+import { showSuccessMessage, logoutConfimation, initMobileMenu } from "./ui.js";
 import { initThemeToggle } from "./theme.js";
 
 // Update navbar fuction
@@ -68,6 +68,8 @@ export async function loadNavbar() {
 
     // Update Navabar Data after loading Nav conten
     updateNavbar();
+
+    initMobileMenu();
 
     const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
     if (confirmLogoutBtn) {

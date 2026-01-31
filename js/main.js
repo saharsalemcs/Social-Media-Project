@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { initScrollToTop } from "./ui.js";
+import { initScrollToTop, showErrorMessage } from "./ui.js";
 // import { initThemeToggle } from "./theme.js";
 const defaultProfileImage = "images/profile.jpg";
 
@@ -67,11 +67,7 @@ export async function loadPosts(page = 1) {
     console.log(`Page ${currentPage} loaded`);
   } catch (error) {
     console.log("Error loading posts:", error);
-    document.querySelector(".posts-container").innerHTML = `
-        <div style="padding: 20px; text-align: center; color: #c00;">
-          ⚠️ Failed to load posts. Please try again later.
-        </div>
-      `;
+    showErrorMessage("Failed to load posts. Please try again later");
   } finally {
     isLoading = false;
   }
