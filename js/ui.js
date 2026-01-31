@@ -49,6 +49,7 @@ export function logoutConfimation() {
 function initMobileMenu() {
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
   const navMenu = document.querySelector(".nav-buttons");
+  const menuOverlay = document.querySelector(".menu-overlay");
 
   if (!mobileMenuToggle || !navMenu) {
     console.warn("Mobile menu elements not found");
@@ -60,23 +61,20 @@ function initMobileMenu() {
     toggleMobileMenu();
   });
 
-  navMenu.querySelectorAll("a, button").forEach((el) => {
-    el.addEventListener("click", () => {
+  if (menuOverlay) {
+    menuOverlay.addEventListener("click", () => {
       closeMobileMenu();
     });
-  });
+  }
 
-  document.addEventListener("click", (e) => {
-    const isClickInsideMenu = navMenu.contains(e.target);
-    const isClickOnToggle = mobileMenuToggle.contains(e.target);
-
-    if (
-      !isClickInsideMenu &&
-      !isClickOnToggle &&
-      navMenu.classList.contains("active")
-    ) {
-      closeMobileMenu();
-    }
+  navMenu.querySelectorAll("a, button").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      if (!el.classList.contains("theme-toggle")) {
+        setTimeout(() => {
+          closeMobileMenu();
+        }, 200);
+      }
+    });
   });
 
   let resizeTimer;
@@ -99,6 +97,7 @@ function initMobileMenu() {
 function toggleMobileMenu() {
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
   const navMenu = document.querySelector(".nav-buttons");
+  const menuOverlay = document.querySelector(".menu-overlay");
 
   if (!mobileMenuToggle || !navMenu) return;
 
@@ -107,18 +106,32 @@ function toggleMobileMenu() {
   mobileMenuToggle.classList.toggle("active");
   navMenu.classList.toggle("active");
 
+  if (menuOverlay) {
+    if (!isActive) {
+      menuOverlay.classList.add("active");
+    } else {
+      menuOverlay.classList.remove("active");
+    }
+  }
+
+  // منع السكرول في الخلفية عند فتح القائمة
   document.body.style.overflow = isActive ? "" : "hidden";
 }
 
 function closeMobileMenu() {
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
   const navMenu = document.querySelector(".nav-buttons");
+  const menuOverlay = document.querySelector(".menu-overlay");
 
   if (!mobileMenuToggle || !navMenu) return;
 
   mobileMenuToggle.classList.remove("active");
   navMenu.classList.remove("active");
   document.body.style.overflow = "";
+
+  if (menuOverlay) {
+    menuOverlay.classList.remove("active");
+  }
 }
 
 export { initMobileMenu, toggleMobileMenu, closeMobileMenu };
