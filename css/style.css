@@ -553,7 +553,7 @@ nav{
     box-shadow: var(--shadow-lg);
 }
 .profile-details{
-    
+    flex: 1;
 }
 .profile-details .profile-name{
     font-size: 28px;
@@ -595,6 +595,18 @@ nav{
     align-items: center;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+}
+@media (max-width: 768px){
+    .profile-avatar-container .profile-avatar{
+        width: 85px;
+        height: 85px;
+    }
+    .profile-details .profile-name{
+        font-size: 24px;
+    }
+    .stat-number{
+        font-size: 24px;
+    }
 }
 .divider{
     width: 2px;
@@ -1158,7 +1170,7 @@ nav{
 }
 @media (max-width: 768px) {
   .post-details-container {
-    margin-top: 70px;
+    margin-top: 25px;
     padding: 0 15px;
   }
 

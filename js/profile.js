@@ -153,7 +153,7 @@ async function loadUserPosts() {
             </div>
             ${actionButtons}
         </div>
-        <div class="post-content">
+        <div class="post-content" dir="auto">
         ${post.title ? `<h3 class="post-title">${post.title}</h3>` : ""}
         <p class="post-text">${post.body || ""}</p>
         ${postImage}

@@ -40,7 +40,7 @@ export async function loadPosts(page = 1) {
                   <span class="post-time">${post.created_at}</span>
               </div>
           </div>
-          <div class="post-content">
+          <div class="post-content" dir="auto">
           ${post.title ? `<h3 class="post-title">${post.title}</h3>` : ""}
               <p class="post-text">${post.body || ""}</p>
               ${postImage}
