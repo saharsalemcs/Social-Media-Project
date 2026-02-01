@@ -1,12 +1,11 @@
 import { CONFIG } from "./config.js";
+import { initScrollToTop, showErrorMessage } from "./ui.js";
 import {
-  initScrollToTop,
-  showSuccessMessage,
-  showErrorMessage,
   openEditModal,
   openDeleteModal,
   initModalListeners,
-} from "./ui.js";
+} from "./modals.js";
+
 const defaultProfileImage = "images/profile.jpg";
 
 // get user's id
@@ -128,11 +127,21 @@ async function loadUserPosts() {
         postImage = `<img src="${post.image.url}" class="post-img" alt="post image">`;
       }
 
+      let postImageUrl = "";
+      if (post.image) {
+        if (typeof post.image === "string") {
+          postImageUrl = post.image;
+        } else if (post.image.url) {
+          postImageUrl = post.image.url;
+        }
+      }
+
       const actionButtons = isOwnProfile
         ? `
 
       <div class="post-actions">
-        <button class="action-btn edit-btn" data-id="${post.id}" data-title="${post.title || ""}" data-body="${post.body || ""}">
+        <button class="action-btn edit-btn" data-id="${post.id}" data-title="${post.title || ""}" data-body="${post.body || ""}"
+        data-image="${postImageUrl}">
           <i class="fas fa-edit"></i>
         </button>
         <button class="action-btn delete-btn" id="deleteBtn" data-id="${post.id}">
@@ -193,7 +202,12 @@ function attachPostEventListeners() {
       const postId = this.dataset.id;
       const title = this.dataset.title;
       const body = this.dataset.body;
-      openEditModal(postId, title, body);
+      const imageUrl = this.dataset.image || null;
+
+      if (imageUrl === "" || imageUrl === "undefined" || imageUrl === "null") {
+        imageUrl = null;
+      }
+      openEditModal(postId, title, body, imageUrl);
     });
   });
   document.querySelectorAll(".delete-btn").forEach((btn) => {

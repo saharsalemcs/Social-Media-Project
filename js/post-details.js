@@ -1,13 +1,11 @@
 import { CONFIG } from "./config.js";
 import { getPostImage } from "./main.js";
+import { showSuccessMessage, showErrorMessage, initScrollToTop } from "./ui.js";
 import {
-  showSuccessMessage,
-  showErrorMessage,
-  initScrollToTop,
   openEditModal,
   openDeleteModal,
   initModalListeners,
-} from "./ui.js";
+} from "./modals.js";
 const defaultProfileImage = "images/profile.jpg";
 
 // get post id from url
@@ -53,9 +51,16 @@ function displayPost(post) {
   const postUsername = document.getElementById("postUsername");
   postUsername.textContent = `${post.author.username}'s`;
   const canEdit = isMyPost(post);
+
+  const postImageUrl =
+    post.image && typeof post.image === "string"
+      ? post.image
+      : post.image?.url || "";
+
   const postActions = `
       <div class="post-actions">
-      <button class="action-btn edit-btn" data-id="${post.id}" data-title="${post.title || ""}" data-body="${post.body || ""}">
+      <button class="action-btn edit-btn" data-id="${post.id}" data-title="${post.title || ""}" data-body="${post.body || ""}"
+      data-image="${postImageUrl}">
         <i class="fas fa-edit"></i>
       </button>
       <button class="action-btn delete-btn" id="deleteBtn" data-id="${post.id}">
@@ -99,7 +104,8 @@ function displayPost(post) {
       const postId = btn.dataset.id;
       const title = btn.dataset.title;
       const body = btn.dataset.body;
-      openEditModal(postId, title, body);
+      const imageUrl = btn.dataset.image || null;
+      openEditModal(postId, title, body, imageUrl);
     });
   });
   document.querySelectorAll(".delete-btn").forEach((btn) => {
