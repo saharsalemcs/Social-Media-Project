@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { loadPosts } from "./main.js";
+import { loadPosts, resetPagination } from "./main.js";
 import { showSuccessMessage, showErrorMessage } from "./ui.js";
 // import { initThemeToggle } from "./theme.js";
 
@@ -208,7 +208,8 @@ async function handleCreatePost(event) {
 
     closeModal();
 
-    loadPosts();
+    resetPagination(); // امسح القديم و reset الـ pagination
+    loadPosts(1); // اجيب أول صفحة من أول وجديد
   } catch (error) {
     console.error("Error creating post:", error);
     showErrorMessage("Error creating post");

@@ -1,9 +1,13 @@
 import { CONFIG } from "./config.js";
-import { initScrollToTop, showSuccessMessage, showErrorMessage } from "./ui.js";
+import {
+  initScrollToTop,
+  showSuccessMessage,
+  showErrorMessage,
+  openEditModal,
+  openDeleteModal,
+  initModalListeners,
+} from "./ui.js";
 const defaultProfileImage = "images/profile.jpg";
-
-let currentEditPostId = null;
-let currentDeletePostId = null;
 
 // get user's id
 function getUserId() {
@@ -201,128 +205,13 @@ function attachPostEventListeners() {
   });
 }
 
-// Open Edit Modal
-export function openEditModal(postId, title, body) {
-  currentEditPostId = postId;
-  // fill fields with current data
-  document.getElementById("editTitle").value = title || "";
-  document.getElementById("editBody").value = body || "";
-
-  document.getElementById("editModal").classList.add("show");
-  document.body.style.overflow = "hidden"; // stop scrolling on the backgorund (focus only on the modal)
-}
-// Close Edit Modal
-export function closeEditModal() {
-  document.getElementById("editModal").classList.remove("show");
-  currentEditPostId = null;
-  document.body.style.overflow = "auto"; // allow scrolling againn
-}
-
-// Save Changes
-async function saveEditedPost(e) {
-  e.preventDefault();
-
-  const title = document.getElementById("editTitle").value.trim();
-  const body = document.getElementById("editBody").value.trim();
-  if (!body) {
-    showErrorMessage("Please write something!");
-    return;
-  }
-  const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
-  if (!token) return;
-
-  try {
-    await axios.put(
-      `${CONFIG.API_URL}/posts/${currentEditPostId}`,
-      { title: title || null, body },
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
-
-    showSuccessMessage("Post updated successfully!");
-
-    closeEditModal();
-
-    await loadUserPosts();
-  } catch (error) {
-    showErrorMessage("Failed to update post!");
-    console.log("Failed to update post!", error);
-  }
-}
-
-// Open Delete Modal
-export function openDeleteModal(postId) {
-  currentDeletePostId = postId;
-  document.getElementById("deleteModal").classList.add("show");
-  document.body.style.overflow = "hidden"; // stop scrolling on the backgorund (focus only on the modal)
-}
-// Close Delete Modal
-export function closeDeleteModal() {
-  document.getElementById("deleteModal").classList.remove("show");
-  currentDeletePostId = null;
-  document.body.style.overflow = "auto"; //  restore scrolling
-}
-// Confirm Delete
-async function confirmDelete() {
-  const token = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_TOKEN);
-  if (!token) return;
-
-  try {
-    await axios.delete(`${CONFIG.API_URL}/posts/${currentDeletePostId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    showSuccessMessage("Post deleted successfully!");
-    closeDeleteModal();
-
-    await loadUserPosts();
-    await loadUserProfile();
-  } catch (error) {
-    console.log("Failed to delete post!", error);
-    showErrorMessage("Failed to delete post!");
-  }
-}
-function attachModalEventListeners() {
-  const closeModalBtn = document.getElementById("closeModal");
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener("click", closeEditModal);
-  }
-
-  const editCancelBtn = document.querySelector("#editModal .cancel-btn");
-  if (editCancelBtn) {
-    editCancelBtn.addEventListener("click", closeEditModal);
-  }
-
-  const editForm = document.getElementById("editPostForm");
-  if (editForm) {
-    editForm.addEventListener("submit", saveEditedPost);
-  }
-
-  const deleteConfirmBtn = document.querySelector("#deleteModal .btn-delete");
-  if (deleteConfirmBtn) {
-    deleteConfirmBtn.addEventListener("click", confirmDelete);
-  }
-
-  const deleteCancelBtn = document.querySelector("#deleteModal .btn-cancel");
-  if (deleteCancelBtn) {
-    deleteCancelBtn.addEventListener("click", closeDeleteModal);
-  }
-
-  document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("modal")) {
-      closeEditModal();
-      closeDeleteModal();
-    }
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeEditModal();
-      closeDeleteModal();
-    }
-  });
-}
 document.addEventListener("DOMContentLoaded", () => {
   loadUserProfile();
   loadUserPosts();
-  attachModalEventListeners();
+  // Pass reload functions to modals
+  initModalListeners(async () => {
+    await loadUserPosts();
+    await loadUserProfile();
+  });
   initScrollToTop();
 });

@@ -1,11 +1,17 @@
 import { CONFIG } from "./config.js";
 import { initScrollToTop, showErrorMessage } from "./ui.js";
-// import { initThemeToggle } from "./theme.js";
 const defaultProfileImage = "images/profile.jpg";
 
 let currentPage = 1;
 let lastPage = 1;
 let isLoading = false;
+
+export function resetPagination() {
+  currentPage = 0;
+  lastPage = 1;
+  const container = document.getElementById("postsWrapper");
+  if (container) container.innerHTML = "";
+}
 
 export async function loadPosts(page = 1) {
   if (isLoading) return; // prevent duplicate loading..

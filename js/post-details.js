@@ -1,7 +1,13 @@
 import { CONFIG } from "./config.js";
 import { getPostImage } from "./main.js";
-import { showSuccessMessage, showErrorMessage, initScrollToTop } from "./ui.js";
-import { openEditModal, openDeleteModal } from "./profile.js";
+import {
+  showSuccessMessage,
+  showErrorMessage,
+  initScrollToTop,
+  openEditModal,
+  openDeleteModal,
+  initModalListeners,
+} from "./ui.js";
 const defaultProfileImage = "images/profile.jpg";
 
 // get post id from url
@@ -239,5 +245,9 @@ if (addCommentForm) {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadPostDetails();
+  // Pass reload function to modals
+  initModalListeners(async () => {
+    await loadPostDetails();
+  });
   initScrollToTop();
 });
