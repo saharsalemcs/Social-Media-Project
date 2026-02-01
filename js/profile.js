@@ -52,16 +52,17 @@ async function loadUserProfile() {
 
     // Update user avatar
     const profileAvatar = document.getElementById("profileAvatar");
-    if (user.profile_image) {
-      if (typeof user.profile_image === "string") {
-        profileAvatar.src = user.profile_image;
-      } else if (user.profile_image.url) {
-        profileAvatar.src = user.profile_image.url;
-      } else {
-        profileAvatar.src = defaultProfileImage;
-      }
-    } else {
-      profileAvatar.src = defaultProfileImage;
+
+    if (profileAvatar) {
+      // console.log(user.profile_image);
+      // console.log(profileAvatar.src);
+      if (typeof user.profile_image === "object" || !user.profile_image)
+        profileAvatar = defaultProfileImage;
+      else profileAvatar.src = user.profile_image;
+
+      profileAvatar.onerror = function () {
+        this.src = defaultProfileImage;
+      };
     }
 
     // Update user stats
@@ -110,17 +111,11 @@ async function loadUserPosts() {
     let postHTML = "";
     for (let post of userPosts) {
       console.log(post);
-      let profileImage;
-      if (
-        post.author.profile_image &&
-        typeof post.author.profile_image === "string"
-      ) {
-        profileImage = post.author.profile_image;
-      } else if (post.author.profile_image && post.author.profile_image.url) {
-        profileImage = post.author.profile_image.url;
-      } else {
-        profileImage = defaultProfileImage;
-      }
+
+      // 🥰 لقد أتمم المحارب مهمته
+      let profile_image = post.author.profile_image;
+      if (typeof profile_image === "object" || !profile_image)
+        profile_image = defaultProfileImage; // ✅✅
 
       let postImage = "";
       if (post.image && typeof post.image === "string") {
@@ -146,7 +141,8 @@ async function loadUserPosts() {
       postHTML += `
       <article class="post-card" data-id="${post.id}">
         <div class="post-header">
-            <img class="profile-image" src="${profileImage}" alt="profile-image">
+          <img class="profile-image" src=${profile_image} alt="profile-image" onerror="this.src='${defaultProfileImage}'"
+              />
             <div>
                 <h2 class="user-name">${post.author.username || "Unknown User"}</h2>
                 <span class="post-time">${post.created_at}</span>

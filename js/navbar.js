@@ -24,17 +24,15 @@ export function updateNavbar() {
       navUsername.textContent = userData.username || userData.name || "User";
     }
     if (navAvatar) {
-      if (
-        userData.profile_image &&
-        typeof userData.profile_image === "string"
-      ) {
-        navAvatar.src = userData.profile_image;
-      } else if (userData.profile_image && userData.profile_image.url) {
-        navAvatar.src = userData.profile_image.url;
-      } else {
+      if (typeof userData.profile_image === "object" || !userData.profile_image)
         navAvatar.src = "images/profile.jpg";
-      }
-      navAvatar.alt = userData.username || "User Avatar";
+      else navAvatar.src = userData.profile_image;
+
+      navAvatar.onerror = function () {
+        this.src = "images/profile.jpg";
+        console.log(this);
+        console.log(this.src);
+      };
     }
     console.log("Navbar updated - User logged in", userData.username);
   } else {

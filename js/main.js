@@ -25,13 +25,17 @@ export async function loadPosts(page = 1) {
 
     let postHTML = "";
     for (let post of posts) {
-      const profileImage = getProfileImage(post);
       const postImage = getPostImage(post);
+
+      // 🥰 لقد أتمم المحارب مهمته
+      let profile_image = post.author.profile_image;
+      if (typeof profile_image === "object" || !profile_image)
+        profile_image = defaultProfileImage; // ✅✅
 
       postHTML += `
         <article class="post-card" data-id="${post.id}">
           <div class="post-header">
-              <img class="profile-image" src="${profileImage}" alt="profile-image"
+              <img class="profile-image" src=${profile_image} alt="profile-image" onerror="this.src='${defaultProfileImage}'"
               >
               <div>
                   <h2 class="user-name">${
@@ -73,18 +77,6 @@ export async function loadPosts(page = 1) {
   }
 }
 
-export function getProfileImage(post) {
-  if (
-    post.author.profile_image &&
-    typeof post.author.profile_image === "string"
-  ) {
-    return post.author.profile_image;
-  } else if (post.author.profile_image && post.author.profile_image.url) {
-    return post.author.profile_image.url;
-  } else {
-    return defaultProfileImage;
-  }
-}
 export function getPostImage(post) {
   if (post.image && typeof post.image === "string") {
     return `<img src="${post.image}" class="post-img" alt="post image">`;
@@ -104,5 +96,4 @@ window.addEventListener("scroll", () => {
 document.addEventListener("DOMContentLoaded", () => {
   loadPosts(1);
   initScrollToTop();
-  // initThemeToggle();
 });

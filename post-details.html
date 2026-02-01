@@ -42,7 +42,7 @@
 
         <!-- Add Comment (Only for logged-in users) -->
         <div class="add-comment-box" id="addCommentBox" >
-          <img id="userAvatar" alt="Your Avatar" class="comment-avatar">
+          <img id="userAvatar" alt="Your Avatar" class="comment-avatar" onerror="this.src='${defaultProfileImage}'">
           <form id="addCommentForm" class="comment-form">
             <textarea id="commentBody" placeholder="Write your comment..." rows="1" required></textarea>
             <button type="submit" class="btn-send" id="sendCommentBtn">

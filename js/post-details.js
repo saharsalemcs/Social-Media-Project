@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { getProfileImage, getPostImage } from "./main.js";
+import { getPostImage } from "./main.js";
 import { showSuccessMessage, showErrorMessage, initScrollToTop } from "./ui.js";
 import { openEditModal, openDeleteModal } from "./profile.js";
 const defaultProfileImage = "images/profile.jpg";
@@ -43,7 +43,6 @@ async function loadPostDetails() {
 
 function displayPost(post) {
   const postCard = document.getElementById("postCard");
-  const profileImage = getProfileImage(post);
   const postImage = getPostImage(post);
   const postUsername = document.getElementById("postUsername");
   postUsername.textContent = `${post.author.username}'s`;
@@ -59,10 +58,16 @@ function displayPost(post) {
     </div>
     `;
 
+  // 🥰 لقد أتمم المحارب مهمته
+  let profile_image = post.author.profile_image;
+
+  if (typeof profile_image === "object" || !profile_image)
+    profile_image = defaultProfileImage; // ✅✅
+
   postCard.innerHTML = `
   <article class="post-card" data-id="${post.id}" data-user-id="${post.author.id}">
     <div class="post-header">
-        <img class="profile-image" src="${profileImage}" alt="profile-image">
+       <img class="profile-image" src=${profile_image} alt="profile-image" onerror="this.src='${defaultProfileImage}'">
         <div>
           <h2 class="user-name">${post.author.username || "Unknown User"}</h2>
           <span class="post-time">${post.created_at}</span>
@@ -132,7 +137,7 @@ function displayComments(comments) {
 
     commentsList.innerHTML += `
     <div class="comment-item">
-      <img class="comment-avatar" src="${authorImage}" alt="${comment.author.username}">
+      <img class="comment-avatar" src="${authorImage}" alt="${comment.author.username}" onerror="this.src='${defaultProfileImage}'">
       <div class="comment-content">
         <div class="comment-author">${comment.author.username}</div>
         <div class="comment-body" dir="auto">${comment.body}</div>
@@ -153,10 +158,8 @@ function toggleAddCommentBox() {
   if (token && userData) {
     addCommentBox.style.display = "flex";
 
-    if (userData.profile_image && typeof userData.profile_image === "string") {
-      userAvatar.src = userData.profile_image;
-    } else if (userData.profile_image && userData.profile_image.url) {
-      userAvatar.src = userData.profile_image.url;
+    if (typeof userData.profile_image === "object" || !userData.profile_image) {
+      userAvatar.src = "images/profile.jpg";
     } else {
       userAvatar.src = defaultProfileImage;
     }
@@ -220,14 +223,12 @@ async function handleAddComment(event) {
 
 function getAuthorImage(comment) {
   if (
-    comment.author.profile_image &&
-    typeof comment.author.profile_image === "string"
+    typeof comment.author.profile_image === "object" ||
+    !comment.author.profile_image
   ) {
-    return comment.author.profile_image;
-  } else if (comment.author.profile_image && comment.author.profile_image.url) {
-    return comment.author.profile_image.url;
+    return "images/profile.jpg";
   } else {
-    return defaultProfileImage;
+    return comment.author.profile_image;
   }
 }
 

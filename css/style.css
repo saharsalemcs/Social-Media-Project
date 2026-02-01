@@ -220,7 +220,6 @@ nav{
 }
 
 .user-info:hover {
-    border-color: var(--primary-color);
     transform: translateY(-2px);
 }
 
